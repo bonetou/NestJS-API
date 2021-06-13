@@ -34,13 +34,12 @@ export class CompanyService {
 
     }
     async findCompanyOnDatabase(cnpj: string): Promise<Company[]> {
-        const result = await this.companyModel.find({ cnpj: cnpj }).select('-_id')
-        return result
+        return await this.companyModel.find({ cnpj: cnpj }).select('-_id')
     }
 
     async createCompany(company) {
         const createdCompany = new this.companyModel(company)
-        const result = await createdCompany.save()
+        await createdCompany.save()
     }
 
     async updateCompanyOnDatabase(company) {

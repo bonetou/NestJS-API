@@ -3,9 +3,10 @@ import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CompanyService } from './company.service';
 import { cachedto } from './dto/cachedto';
 import { ParamsDto } from './dto/paramsDto';
+import { HttpExceptionNotFound } from './Exception/HttpExceptionNotFound';
 
-@ApiTags('Company')
-@Controller('company')
+@ApiTags('Empresas')
+@Controller('empresa')
 export class CompanyController {
     constructor(private companyService: CompanyService) { }
 
@@ -25,10 +26,7 @@ export class CompanyController {
                 await this.companyService.createCompany(response)
                 return response
             }
-            throw new HttpException({
-                status: HttpStatus.NOT_FOUND,
-                error: "Dados não encontrados para essa empresa",
-            }, HttpStatus.NOT_FOUND)
+            throw HttpExceptionNotFound(); 
         }
 
         const response = await this.companyService.findCompany(params.cnpj)
@@ -40,11 +38,6 @@ export class CompanyController {
             this.companyService.createCompany(response)
             return response
         }
-        throw new HttpException({
-            status: HttpStatus.NOT_FOUND,
-            error: "Dados não encontrados para essa empresa",
-        }, HttpStatus.NOT_FOUND)
-
-
+        throw HttpExceptionNotFound();
     }
 }
