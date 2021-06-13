@@ -12,7 +12,7 @@ import { Partner, PartnerSchema } from './schemas/partner.schema'
         { name: Company.name, schema: CompanySchema },
         { name: Partner.name, schema: PartnerSchema }
       ]),
-    MongooseModule.forRoot('mongodb://test:test@localhost:27017/'),
+    MongooseModule.forRoot(`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@mongo:27017/`),
     HttpModule.register({
       baseURL: 'https://api.brasil.io/v1/dataset/socios-brasil/',
       timeout: 5000,

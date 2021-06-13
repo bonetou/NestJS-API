@@ -6,16 +6,41 @@ services:
   mongo:
     image: mongo
     restart: always
+    container_name: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: test
-      MONGO_INITDB_ROOT_PASSWORD: test
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - 27017:27017
+
   mongo-express:
     image: mongo-express
     restart: always
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: test
-      ME_CONFIG_MONGODB_ADMINPASSWORD: test
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASSWORD}
+
+  Desafio-combate-a-fraude:
+    image: "node:14-slim"
+    container_name: docker-nest-js
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: "node"
+    working_dir: /usr/src/app
+    environment:
+      NODE_ENV: production
+      VERSION: 1.0
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      AUTH_TOKEN: ${AUTH_TOKEN}
+    volumes:
+      - .:/usr/src/app
+      - /usr/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - mongo
+  
