@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type PartnerDocument = Partner & Document;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Partner {
     @Prop()
     cpf_cnpj_socio: string;

@@ -1,15 +1,16 @@
-import { HttpService } from '@nestjs/common';
+import { HttpService, Inject } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Company, CompanyDocument } from './database/mongo/schemas/company.schema';
 import { CompanyResponse, Partner, PartnerResponse } from './interfaces/apiResponse.interface';
 import { CompanyInterface } from './interfaces/company.interface';
+import { Company } from './schemas/company.schema';
 
 @Injectable()
 export class CompanyService {
-    constructor(private httpService: HttpService,
-        @InjectModel(Company.name) private companyModel: Model<CompanyDocument>) { }
+    constructor(
+        @InjectModel(Company.name) private companyModel: Model<Company>,
+        private httpService: HttpService) { }
 
     async findCompany(cpnj: string): Promise<CompanyInterface> {
         const urlCompany = 'empresas/data/?cnpj=' + cpnj
@@ -28,5 +29,19 @@ export class CompanyService {
             })
         }
         return data
+    }
+    async findCompanyOnDatabase(cnpj: string): Promise<any> {
+        const result = await this.companyModel.find({ cnpj: cnpj }).select('-_id')
+        return result
+    }
+
+    async createCompany(company) {
+        const createdCompany = new this.companyModel(company)
+        const result = await createdCompany.save()
+    }
+
+    async updateCompanyOnDatabase(company) {
+        const doc = await this.companyModel.findOneAndUpdate({ cnpj: company.cnpj }, company)
+        await doc.save()
     }
 }

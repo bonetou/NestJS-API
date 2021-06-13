@@ -5,8 +5,8 @@ import { Partner } from './partner.schema';
 
 export type CompanyDocument = Company & Document;
 
-@Schema()
-export class Company {
+@Schema({ versionKey: false})
+export class Company extends Document {
   @Prop()
   cnpj: string;
 
@@ -16,8 +16,8 @@ export class Company {
   @Prop()
   uf: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Partner' }] })
-  qsa: Partner[];
+  @Prop()
+  qsa: [Partner];
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
