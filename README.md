@@ -32,7 +32,7 @@ DB_PASSWORD=test
 
 - Rodar o seguinte comando docker-compose:
 ```
-docker-compose --env-file .env up -d
+docker-compose --env-file .env up
 ```
 
 ## Uso e Teste
